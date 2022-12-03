@@ -1,0 +1,6 @@
+#!/usr/bin/dh-exec
+# Note: Ensure this file is able to be executed (`chmod +x debian/install`)
+
+# Path to file in repository => path to install file on target
+HelloWorld/hello_world.py => usr/bin/hello-world
+debian/hello-world.1 => /usr/share/man/man1/hello-world.1

@@ -1,0 +1,19 @@
+Source: hello-world
+Section: misc
+Priority: optional
+Maintainer: Aidan Gallagher <aidgal2@gmail.com>
+Build-Depends: debhelper (>= 9.0.0),
+               dh-exec,
+               black,
+               gitlint,
+               mypy,
+               python3-pytest,
+               python3-coverage
+Standards-Version: 4.5.1
+
+Package: hello-world
+Architecture: all 
+Depends: python3, ${misc:Depends}
+Description: This is a dummy package with a hello world python script 
+ This is the long description which should add more information about
+ package. There isn't any further information to add...

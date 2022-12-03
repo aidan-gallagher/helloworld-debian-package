@@ -1,0 +1,10 @@
+#!/usr/bin/make -f
+
+# Uncomment this to turn on verbose mode.
+#export DH_VERBOSE=1
+
+%:
+	dh $@
+
+# Override dh_auto_build so it doesn't call the makefile which is being used as a task runner.
+override_dh_auto_build:
