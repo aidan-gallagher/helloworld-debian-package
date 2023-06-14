@@ -10,11 +10,11 @@ mypy:
 	mypy .
 
 pytest:
-	python3.9-coverage run -m pytest 
+	python3-coverage run -m pytest 
 
 coverage:
-	python3.9-coverage html
-	python3.9-coverage report
+	python3-coverage html
+	python3-coverage report
 
 gitlint:
 	gitlint --commits $(commits)
@@ -49,7 +49,7 @@ run-container:
 	sudo docker run \
 		--interactive \
 		--tty \
-		--mount type=bind,src=${PWD},dst=/home/docker/code \
+		--mount type=bind,src=${PWD},dst=/workspaces/code \
 		--mount type=bind,src=${HOME}/.gitconfig,dst=/home/docker/.gitconfig \
 		--mount type=bind,src=${HOME}/.ssh,dst=/home/docker/.ssh \
 		--mount type=bind,src=${HOME}/.bash_history,dst=/home/docker/.bash_history \
