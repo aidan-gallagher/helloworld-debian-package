@@ -10,46 +10,15 @@ permissions:
   contents: read
 
 jobs:
-  build_container:
-    runs-on: ubuntu-latest
-    steps:
-    - name: Login to Docker Hub
-      uses: docker/login-action@v2
-      with:
-        username: ${{ secrets.DOCKERHUB_USERNAME }}
-        password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Check out code
-      uses: actions/checkout@v3
-    - name: Build and push Docker image
-      uses: docker/build-push-action@v3
-      with:
-        context: .
-        file: Dockerfile
-        push: true
-        tags: aidangallagher/helloworld-build-container:latest
-
   run_checks:
     runs-on: ubuntu-latest
-    needs: build_container
-    container:
-      image: aidangallagher/helloworld-build-container:latest
     steps:
     - name: Check out code
       uses: actions/checkout@v3
-    # Run Checks
-    - name: black
-      run: make black
-    - name: mypy
-      run: make mypy
-    - name: pytest
-      run: make pytest
-    - name: coverage
-      run: make coverage
-    - name: gitlint
-      run: make gitlint
-    - name: whitespace
-      run: make whitespace
+    - name: install-dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install --yes --fix-missing devscripts equivs
+        sudo mk-build-deps --install --remove
     - name: package
-      run: make package
-    - name: lintian
-      run: make lintian
+      run: dpkg-buildpackage --no-sign

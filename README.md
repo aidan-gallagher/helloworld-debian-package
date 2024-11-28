@@ -1,7 +1,6 @@
 # Introduction
 
-This is an example project to demonstrate how to implement a continuous integration pipeline using Docker and GNU Make.
-The benefits of this design are covered in my [Continuous Integration Pipeline article](https://aidan-gallagher.github.io/blog/continuous-integration-pipeline/).
+This is an example project to demonstrate how to create a Debian package.
 
 # Contents Description
 
@@ -14,54 +13,38 @@ This is where your business logic will reside. This example application will sim
 This contains the packaging information for the project. More information on debian packaging can be found on the [Debian Wiki](https://wiki.debian.org/Packaging).
 The `Build-Depends:` section of the Debian/control file describes the dependencies needed to build this repository.
 
-## Makefile
-
-This is used as a task runner to invoke other tools correctly.
-
-## Dockerfile
-
-This describes the environment for the developer or CI system to run in.
-
-## .github/workflows
-
-This describes the CI pipeline.
-
 # How to use
-
-## Locally
+## Basic Approach
 
 1. Clone the repository and enter the directory.
 
 ```
-git clone git@github.com:aidan-gallagher/ci-pipeline-example.git
-cd ci-pipeline-example
+git clone git@github.com:aidan-gallagher/helloworld-debian-package.git
+cd helloworld-debian-package
 ```
 
-1. Build the container.
+1. Install the dependencies
 
 ```
-make build-container
+sudo apt-get update
+sudo apt-get install --yes --fix-missing devscripts equivs
+sudo mk-build-deps --install --remove
 ```
 
-2. Run the container.
+2. Build the package (without signing it)
 
 ```
-make run-container
+dpkg-buildpackage --no-sign
 ```
 
-3. Make some dummy change to the program.  
-   Change the `hello_world()` function to return a different string.
-
-4. Verify your changes pass all the automatic checks.
-
+3. Clean up build files
 ```
-make all
+dh_clean
 ```
 
-5. Install your newly created debian package.
-
+3. Install your newly created package
 ```
-sudo apt install ./deb_packages/hello-world_1.0.0_all.deb
+dpkg -i ../hello-world_1.0.0_all.deb 
 ```
 
 6. Run your new program.
@@ -70,12 +53,24 @@ sudo apt install ./deb_packages/hello-world_1.0.0_all.deb
 hello-world
 ```
 
-## On Server
+## Debpic Approach
+Using the approach above you do the building and packaging on your host OS. This means your limited to building for the distro which are currently using, you are required to download and install all the build dependencies.
 
-Github actions will:
+Alternatively you can use [debpic](https://github.com/aidan-gallagher/debpic) which will run all the build and packaging steps inside a docker container.
 
-1. Build the development container and upload it to [dockerhub](https://hub.docker.com/repository/docker/aidangallagher/helloworld-build-container).
-2. Enter the build container
-3. Run all the code checks via the makefile.
+1. Clone the repository and enter the directory.
 
-The results can be viewed on the [Actions tab](https://github.com/aidan-gallagher/ci-pipeline-example/actions) on Github.
+```
+git clone git@github.com:aidan-gallagher/helloworld-debian-package.git
+cd helloworld-debian-package
+```
+
+2. Build the package (without signing it)
+```
+debpic -- --no-sign
+```
+
+3. Install your newly created package
+```
+dpkg -i ./built_packages/hello-world_1.0.0_all.deb 
+```
