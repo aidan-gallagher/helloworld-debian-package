@@ -1,4 +1,7 @@
+# Introduction
 
+This is an example project to demonstrate how to implement a continuous integration pipeline using Docker and GNU Make.
+The benefits of this design are covered in my [Continuous Integration Pipeline article](https://aidan-gallagher.github.io/blog/continuous-integration-pipeline/).
 
 # Contents Description
 
